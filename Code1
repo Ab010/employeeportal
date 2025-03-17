@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmployeeHub - AI-Powered Knowledge Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .search-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animate-typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .answer-card {
+            transition: all 0.3s ease;
+        }
+        .answer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <h1 class="ml-2 text-xl font-bold text-gray-800">EmployeeHub</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-700 hover:text-indigo-600 transition duration-150">Home</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600 transition duration-150">Categories</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600 transition duration-150">Recent Documents</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600 transition duration-150">Bookmarks</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button class="hidden md:block bg-indigo-100 text-indigo-600 px-4 py-2 rounded-md hover:bg-indigo-200 transition duration-150">
+                    Upload Document
+                </button>
+                <div class="relative">
+                    <button class="flex items-center space-x-2 bg-white text-gray-700 hover:text-indigo-600 transition duration-150">
+                        <img src="/api/placeholder/40/40" alt="User avatar" class="w-8 h-8 rounded-full border-2 border-indigo-200">
+                        <span class="hidden md:inline font-medium">Emma Johnson</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section class="mb-16 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">The knowledge you need, when you need it</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">Ask any question about company policies, procedures, or resources. Our AI will find the most relevant information for you.</p>
+            
+            <div class="max-w-3xl mx-auto relative">
+                <div class="relative">
+                    <input id="search-input" type="text" placeholder="Ask anything about company policies, benefits, IT resources..." class="w-full px-6 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <button id="search-button" class="absolute right-2 top-2 bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition duration-150">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+                <div class="mt-3 flex flex-wrap justify-center gap-2 text-sm">
+                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200">How do I request PTO?</span>
+                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200">Remote work policy</span>
+                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200">Health insurance benefits</span>
+                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200">New hire onboarding</span>
+                </div>
+            </div>
+        </section>
+
+        <div id="search-results" class="hidden">
+            <div id="search-loading" class="text-center py-10">
+                <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-lg transition ease-in-out duration-150 cursor-default">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="animate-typing">Searching through company knowledge base...</span>
+                </div>
+            </div>
+
+            <div id="answer-container" class="hidden">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <div class="flex items-start mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4 flex-1">
+                            <h3 class="text-lg font-medium text-gray-900">How do I request time off?</h3>
+                            <div class="mt-2 text-gray-700 space-y-4">
+                                <p>Based on our company policies, here's how you can request time off:</p>
+                                <ol class="list-decimal pl-5 space-y-2">
+                                    <li>Log in to the HR portal using your company credentials</li>
+                                    <li>Navigate to the "Time Off" section in the left sidebar</li>
+                                    <li>Click on "Request Time Off" button</li>
+                                    <li>Select the date range and type of leave (vacation, sick, personal, etc.)</li>
+                                    <li>Add any necessary notes or comments</li>
+                                    <li>Submit the request for manager approval</li>
+                                </ol>
+                                <p>You should receive an email notification once your request has been approved or denied. Remember that requests should be submitted at least 2 weeks in advance for planned time off.</p>
+                            </div>
+                            <div class="mt-4 text-sm text-gray-500">
+                                <p>Sources: <a href="#" class="text-indigo-600 hover:text-indigo-800">Employee Handbook (Section 4.2)</a>, <a href="#" class="text-indigo-600 hover:text-indigo-800">PTO Policy (Updated Jan 2025)</a></p>
+                            </div>
+                            <div class="mt-4 flex space-x-3">
+                                <button class="inline-flex items-center px-3 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                                    </svg>
+                                    Share
+                                </button>
+                                <button class="inline-flex items-center px-3 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                    </svg>
+                                    Bookmark
+                                </button>
+                                <button class="inline-flex items-center px-3 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                                    </svg>
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Related Resources</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="answer-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                        <div class="p-5">
+                            <div class="flex items-center mb-3">
+                                <svg class="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <h4 class="ml-2 text-lg font-medium text-gray-900">Employee Handbook</h4>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3">Complete guide to company policies, including detailed information about time off, benefits, and workplace guidelines.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-500">Updated: Jan 15, 2025</span
